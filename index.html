@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Sign up for sessions at Elan's at-home retreat, November 18–24.">
+<meta property="og:title" content="Elan's At-Home Retreat With Friends">
+<meta property="og:description" content="Pick the sessions you'd like to join, November 18–24.">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Elan's At-Home Retreat With Friends</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Karla:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a soft, paper-like week calendar drawn to time scale (hours down, days across); phones get one card per day; summary + copy below. */
+:root {
+  --bg: #f5efe3;
+  --surface: #fbf7ef;
+  --fg: #3b3a32;
+  --muted: #7d776a;
+  --line: #e5dccb;
+  --accent: #5f7150;
+  --accent-ink: #fbf7ef;
+  --move: #e4e6d2;  --move-ink: #4d5a3b;
+  --still: #e8e2e8; --still-ink: #5b4d62;
+  --spa: #dde8e1;   --spa-ink: #3e5e53;
+  --tre: #f1e3cd;   --tre-ink: #7a5a2e;
+  --read: #ece3d1;  --read-ink: #5e5039;
+  --dusk: #ecdcd5;  --dusk-ink: #6d4b43;
+  --play: #dfe4ec;  --play-ink: #3d4a66;
+  --font-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --font-body: "Karla", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --radius: 12px;
+  --hour: 50px;
+}
+/* Deliberately light-only: the cream look stays the same in every viewer theme. */
+:root, :root[data-theme="dark"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+}
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 56px 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.1; font-weight: 600; }
+h1 { font-size: clamp(1.25rem, 5.4vw, 4rem); letter-spacing: -0.01em; white-space: nowrap; }
+h2 { font-size: 1.85rem; }
+p { margin: 0; }
+.eyebrow {
+  text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.75rem; font-weight: 600; color: var(--muted);
+}
+
+header { display: flex; flex-direction: column; gap: 14px; }
+header p { max-width: 64ch; }
+.mark { width: 44px; height: 44px; color: var(--accent); }
+.dates { font-family: var(--font-display); font-style: italic; font-size: 1.45rem; font-weight: 500; color: var(--accent); }
+.note { color: var(--muted); font-size: 1.02rem; }
+
+section { display: flex; flex-direction: column; gap: 18px; }
+.step-head { display: flex; flex-direction: column; gap: 4px; }
+.step-head p { color: var(--muted); }
+
+/* Name */
+.name-field { display: flex; flex-direction: column; gap: 6px; max-width: 420px; }
+label { font-weight: 600; }
+input[type="text"], textarea {
+  font: inherit; color: var(--fg); background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; width: 100%;
+}
+input[type="text"]:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+/* Legend + actions */
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 0.8rem; font-weight: 500; padding: 3px 11px; border-radius: 999px; }
+.k-move { background: var(--move); color: var(--move-ink); }
+.k-still { background: var(--still); color: var(--still-ink); }
+.k-spa { background: var(--spa); color: var(--spa-ink); }
+.k-tre { background: var(--tre); color: var(--tre-ink); }
+.k-read { background: var(--read); color: var(--read-ink); }
+.k-dusk { background: var(--dusk); color: var(--dusk-ink); }
+.k-play { background: var(--play); color: var(--play-ink); }
+
+button { font: inherit; cursor: pointer; }
+.link-btn {
+  background: none; border: none; color: var(--accent); font-weight: 600; padding: 4px 2px;
+  text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px;
+}
+.link-btn:focus-visible, .slot:focus-visible, .head-btn:focus-visible, .primary:focus-visible, .info:focus-visible, .ghost:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+
+/* Desktop calendar, drawn to time scale */
+/* Sideways scrolling only (phones); the page itself handles up/down. */
+.cal-scroll {
+  overflow-x: auto; overflow-y: hidden; padding-bottom: 14px;
+  scroll-snap-type: x proximity; scroll-padding-left: 58px;
+  overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+}
+.rail, .corner-cell { position: sticky; left: 0; z-index: 2; background: var(--bg); }
+.col, .cal .head-btn { scroll-snap-align: start; }
+.swipe-hint { display: none; color: var(--muted); font-size: 0.9rem; font-weight: 600; }
+.cal {
+  display: grid;
+  grid-template-columns: 52px repeat(7, minmax(152px, 1fr));
+  column-gap: 6px;
+  row-gap: 10px;
+  min-width: min-content;
+}
+.head-btn {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  color: var(--fg); padding: 6px 8px 6px; text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+}
+.head-btn:hover { border-color: var(--accent); }
+.head-btn .dow { font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; line-height: 1.1; }
+.head-btn .dom { font-size: 0.82rem; color: var(--muted); }
+.head-btn .all { font-size: 0.7rem; color: var(--accent); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; }
+.rail span {
+  position: absolute; right: 4px; transform: translateY(-50%);
+  font-size: 0.72rem; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.col {
+  position: relative;
+  border-radius: var(--radius);
+  background-image: repeating-linear-gradient(to bottom, var(--line) 0, var(--line) 1px, transparent 1px, transparent var(--hour));
+}
+.col .slot { position: absolute; left: 0; right: 0; padding: 4px 6px 4px 24px; font-size: 0.8rem; line-height: 1.2; border-radius: 8px; }
+.col .slot .when { font-size: 0.68rem; }
+.col .slot::before { left: 7px; top: 6px; width: 12px; height: 12px; }
+.col .slot[aria-pressed="true"]::after { left: 11.5px; top: 8px; width: 3.5px; height: 6px; }
+.col .slot.compact { padding-top: 1px; padding-bottom: 1px; }
+.col .slot.compact::before { top: 50%; margin-top: -6px; }
+.col .slot.compact[aria-pressed="true"]::after { top: 50%; margin-top: -4.5px; }
+.col .info { width: 16px; height: 16px; font-size: 0.65rem; }
+
+.slot {
+  border: 1.5px solid transparent; border-radius: 10px;
+  padding: 8px 8px 8px 30px;
+  text-align: left; font-size: 0.86rem; font-weight: 500; line-height: 1.25;
+  display: flex; align-items: flex-start; gap: 4px;
+  transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+  overflow: hidden;
+}
+.slot .txt { flex: 1; min-width: 0; }
+.slot .when { display: block; font-size: 0.72rem; font-weight: 600; opacity: 0.78; font-variant-numeric: tabular-nums; }
+.slot::before {
+  content: ""; position: absolute; left: 9px; top: 10px; width: 14px; height: 14px;
+  border-radius: 50%; border: 1.5px solid currentColor; opacity: 0.5;
+}
+.slot:hover { border-color: currentColor; }
+.slot[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.slot[aria-pressed="true"]::before { opacity: 1; background: var(--accent-ink); border-color: var(--accent-ink); }
+.slot[aria-pressed="true"]::after {
+  content: ""; position: absolute; left: 14px; top: 12.5px; width: 4px; height: 7px;
+  border: solid var(--accent); border-width: 0 1.75px 1.75px 0; transform: rotate(45deg);
+}
+.slot.compact { padding-top: 5px; padding-bottom: 5px; align-items: center; }
+.slot.compact::before { top: 50%; margin-top: -7px; }
+.slot.compact[aria-pressed="true"]::after { top: 50%; margin-top: -5.5px; }
+.slot.compact .when { display: inline; margin-left: 4px; }
+
+.info {
+  border: 1px solid currentColor; background: transparent; color: inherit;
+  border-radius: 999px; width: 18px; height: 18px; padding: 0; font-size: 0.7rem; font-weight: 700;
+  line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex: none;
+}
+
+/* Phone day cards */
+.days { display: none; flex-direction: column; gap: 14px; }
+.day {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.day-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.day-top h3 { font-size: 1.5rem; }
+.day-top h3 span { font-family: var(--font-body); font-weight: 400; font-size: 0.92rem; color: var(--muted); margin-left: 8px; }
+.day .slot { position: relative; width: 100%; min-height: 52px; padding-top: 9px; padding-bottom: 9px; }
+.day .slot::before { top: 50%; margin-top: -7px; }
+.day .slot[aria-pressed="true"]::after { top: 50%; margin-top: -5.5px; }
+.day .slot { align-items: center; }
+.day .gap { height: 6px; }
+
+@media (max-width: 900px) {
+  .swipe-hint { display: block; }
+}
+
+/* Summary */
+.summary-box {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 26px;
+}
+@media (max-width: 760px) { .summary-box { grid-template-columns: minmax(0, 1fr); padding: 16px; } }
+.preview {
+  white-space: pre-wrap; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.83rem;
+  background: var(--bg); border-radius: var(--radius); padding: 14px; margin: 0; min-height: 160px;
+  max-height: 440px; overflow: auto; color: var(--fg);
+}
+.side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.count { font-family: var(--font-display); font-size: 2.8rem; font-weight: 600; line-height: 1; color: var(--accent); }
+.count small { font-family: var(--font-body); font-size: 0.95rem; font-weight: 500; color: var(--muted); margin-left: 8px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.primary {
+  background: var(--accent); color: var(--accent-ink); border: none; border-radius: 999px;
+  padding: 13px 26px; font-weight: 600; font-size: 1rem;
+}
+.primary:hover { filter: brightness(1.06); }
+.ghost {
+  background: transparent; color: var(--fg); border: 1px solid var(--line); border-radius: 999px;
+  padding: 11px 20px; font-weight: 500;
+}
+.status { font-size: 0.9rem; font-weight: 600; color: var(--accent); }
+.status.warn { color: var(--tre-ink); }
+textarea { resize: vertical; min-height: 80px; }
+.fallback { display: flex; flex-direction: column; gap: 6px; }
+.fallback textarea { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.82rem; min-height: 180px; }
+
+footer { color: var(--muted); font-size: 0.9rem; max-width: 64ch; }
+
+/* TRE dialog */
+dialog {
+  border: none; border-radius: 20px; padding: 0; max-width: min(520px, calc(100vw - 32px));
+  background: var(--surface); color: var(--fg); box-shadow: 0 24px 70px rgba(40, 32, 18, 0.28);
+}
+dialog::backdrop { background: rgba(30, 26, 18, 0.5); }
+.dlg { padding: 26px; display: flex; flex-direction: column; gap: 14px; }
+.dlg h2 { font-size: 2rem; }
+.dlg ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.watch {
+  display: flex; align-items: center; gap: 14px; text-decoration: none; color: var(--fg);
+  background: var(--tre); border-radius: 14px; padding: 14px;
+}
+.watch:hover { outline: 2px solid var(--tre-ink); }
+.watch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.play { width: 44px; height: 44px; border-radius: 50%; background: var(--tre-ink); flex: none; position: relative; }
+.play::after {
+  content: ""; position: absolute; left: 17px; top: 13px;
+  border-style: solid; border-width: 9px 0 9px 14px; border-color: transparent transparent transparent var(--tre);
+}
+.watch strong { display: block; color: var(--tre-ink); }
+.watch span { font-size: 0.88rem; color: var(--tre-ink); }
+.dlg .actions { justify-content: flex-end; }
+.video { aspect-ratio: 16 / 9; max-width: 100%; border-radius: 12px; overflow: hidden; background: var(--line); }
+.video iframe { width: 100%; height: 100%; border: 0; display: block; }
+.thumb {
+  position: relative; display: block; aspect-ratio: 16 / 9; max-width: 100%;
+  border-radius: 12px; overflow: hidden; background: var(--tre); color: #fff; text-decoration: none;
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(20, 16, 10, 0.55), rgba(20, 16, 10, 0.05) 55%); }
+.big-play {
+  position: absolute; left: 50%; top: 50%; width: 72px; height: 72px; margin: -36px 0 0 -36px; z-index: 1;
+  border-radius: 50%; background: rgba(251, 247, 239, 0.94); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  transition: transform 140ms ease;
+}
+.big-play::after {
+  content: ""; position: absolute; left: 28px; top: 22px;
+  border-style: solid; border-width: 14px 0 14px 22px; border-color: transparent transparent transparent var(--accent);
+}
+.thumb:hover .big-play { transform: scale(1.06); }
+.thumb:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.thumb-cap { position: absolute; left: 14px; bottom: 10px; z-index: 1; font-weight: 600; font-size: 0.95rem; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); }
+.yt-link { color: var(--muted); font-size: 0.88rem; align-self: flex-start; }
+@media (prefers-reduced-motion: reduce) { .big-play { transition: none; } }
+
+/* Add to calendar */
+.cal-add {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px;
+}
+.cal-add p { color: var(--muted); max-width: 52ch; flex: 1 1 280px; min-width: 0; }
+.cal-add .actions { flex: none; }
+
+@media (prefers-reduced-motion: reduce) { .slot { transition: none; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.45"></circle>
+      <path d="M24 11c4 5 6 9 6 13a6 6 0 0 1-12 0c0-4 2-8 6-13z" fill="currentColor" opacity="0.85"></path>
+      <path d="M10 31c5 1 9 3 14 3s9-2 14-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+    </svg>
+    <span class="eyebrow">Sign-up sheet</span>
+    <h1>Elan's At-Home Retreat With Friends</h1>
+    <p class="dates">Wednesday, November 18 – Tuesday, November 24</p>
+    <p class="note">This page only collects sign-ups. Once I know who's coming to what, I'll coordinate the location for each session and let you know.</p>
+  </header>
+
+  <section aria-labelledby="s1">
+    <div class="step-head">
+      <span class="eyebrow">Step 1</span>
+      <h2 id="s1">Your name</h2>
+    </div>
+    <div class="name-field">
+      <label for="name">Name</label>
+      <input id="name" type="text" autocomplete="name" placeholder="First and last name">
+    </div>
+  </section>
+
+  <section aria-labelledby="s2">
+    <div class="step-head">
+      <span class="eyebrow">Step 2</span>
+      <h2 id="s2">Tap the sessions you'd like to join</h2>
+      <p>Tap a day's name to choose that whole day.</p>
+    </div>
+    <div class="toolbar">
+      <div class="legend" aria-label="Session types">
+        <span class="chip k-move">Movement</span>
+        <span class="chip k-still">Meditation</span>
+        <span class="chip k-spa">Spa</span>
+        <span class="chip k-tre">TRE</span>
+        <span class="chip k-read">Reading</span>
+        <span class="chip k-dusk">Evening</span>
+        <span class="chip k-play">Volleyball</span>
+      </div>
+      <div class="actions">
+        <button class="link-btn" type="button" id="whatTre">What is TRE?</button>
+        <button class="link-btn" type="button" id="clearAll">Clear all</button>
+      </div>
+    </div>
+    <p class="swipe-hint">Swipe sideways to see the whole week →</p>
+    <div class="cal-scroll"><div class="cal" id="cal"></div></div>
+  </section>
+
+  <section aria-labelledby="s3">
+    <div class="step-head">
+      <span class="eyebrow">Step 3</span>
+      <h2 id="s3">Copy your sign-up and send it to me</h2>
+      <p>Paste it into a text, email or whatever message you usually send me.</p>
+    </div>
+    <div class="summary-box">
+      <pre class="preview" id="preview" aria-live="polite"></pre>
+      <div class="side">
+        <div class="count" id="count">0<small>sessions picked</small></div>
+        <div class="name-field" style="max-width:none">
+          <label for="notes">Anything I should know? <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+          <textarea id="notes" placeholder="e.g. I might be 10 minutes late on Friday, or I'd love to bring a friend"></textarea>
+        </div>
+        <div class="actions">
+          <button class="primary" type="button" id="copy">Copy my sign-up</button>
+          <span class="status" id="status" role="status"></span>
+        </div>
+        <div class="fallback" id="fallback" hidden>
+          <label for="fallbackText">Your browser blocked copying. Select this text and copy it yourself:</label>
+          <textarea id="fallbackText" readonly></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s4">
+    <div class="step-head">
+      <span class="eyebrow">Last step</span>
+      <h2 id="s4">Add your sessions to your calendar</h2>
+    </div>
+    <div class="cal-add">
+      <p>This saves a calendar file with every session you picked. Open it to add them all to Apple Calendar, Google Calendar or Outlook. Locations will say "to be confirmed" until I send them.</p>
+      <div class="actions">
+        <button class="primary" type="button" id="addCal">Add to my calendar</button>
+        <span class="status" id="calStatus" role="status"></span>
+      </div>
+    </div>
+  </section>
+
+  <footer>Your picks are saved on this device, so you can close the page and come back to finish.</footer>
+</div>
+
+<dialog id="treDialog" aria-labelledby="treTitle">
+  <div class="dlg">
+    <span class="eyebrow">Early afternoon</span>
+    <h2 id="treTitle">What is TRE?</h2>
+    <p>TRE stands for Tension &amp; Trauma Releasing Exercises. It's a short series of simple stretches that tire out the leg and hip muscles, then you lie down and let your body gently shake or tremble on its own.</p>
+    <ul>
+      <li>That shaking is a natural way the body lets go of stress and built-up tension.</li>
+      <li>No experience needed. You stay in control and can stop any time.</li>
+      <li>Wear comfy clothes and bring a mat or blanket if you have one.</li>
+    </ul>
+    <a class="thumb" id="treThumb" href="https://www.youtube.com/watch?v=aRXNzFEoyxQ" target="_blank" rel="noopener noreferrer" aria-label="Play the TRE intro video">
+      <img src="https://i.ytimg.com/vi/aRXNzFEoyxQ/hqdefault.jpg" alt="" loading="lazy">
+      <span class="big-play" aria-hidden="true"></span>
+      <span class="thumb-cap">Watch the TRE intro video</span>
+    </a>
+    <div class="video" id="treVideo" hidden></div>
+    <a class="yt-link" href="https://www.youtube.com/watch?v=aRXNzFEoyxQ" target="_blank" rel="noopener noreferrer">Or open it on YouTube</a>
+    <div class="actions">
+      <button class="ghost" type="button" id="closeTre">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  // Times are minutes after midnight.
+  function S(key, start, end, name, kind, extra) {
+    var s = { key: key, start: start, end: end, name: name, kind: kind };
+    if (extra) for (var k in extra) s[k] = extra[k];
+    return s;
+  }
+  var TRE = { short: "TRE", info: true };
+  var TRE_NAME = "TRE (trauma release exercises)";
+  function standard() {
+    return [
+      S("workout", 480, 540, "Workout & stretch", "move"),
+      S("med1", 540, 600, "Meditation", "still"),
+      S("spa", 600, 660, "Spa time", "spa"),
+      S("tre", 795, 840, TRE_NAME, "tre", TRE),
+      S("med2", 840, 900, "Meditation", "still"),
+      S("read", 960, 1020, "Reading", "read"),
+      S("evening", 1020, 1140, "Meditation, social time or nature", "dusk")
+    ];
+  }
+  var DAYS = [
+    { key: "wed", dow: "Wed", long: "Wednesday", date: "Nov 18",
+      sessions: standard().filter(function (s) { return s.key !== "evening"; })
+        .concat([S("volley", 1020, 1140, "Volleyball", "play")]) },
+    { key: "thu", dow: "Thu", long: "Thursday", date: "Nov 19", sessions: standard() },
+    { key: "fri", dow: "Fri", long: "Friday", date: "Nov 20",
+      sessions: standard().map(function (s) {
+        if (s.key === "read") { s.start -= 60; s.end -= 60; }
+        if (s.key === "evening") { s.start -= 60; }
+        return s;
+      }) },
+    { key: "sat", dow: "Sat", long: "Saturday", date: "Nov 21",
+      sessions: standard().filter(function (s) { return s.key !== "evening"; }).map(function (s) {
+        if (s.key === "workout" || s.key === "med1" || s.key === "spa") { s.start += 60; s.end += 60; }
+        if (s.key === "read") { s.start -= 60; s.end -= 60; }
+        return s;
+      }) },
+    { key: "sun", dow: "Sun", long: "Sunday", date: "Nov 22", sessions: [
+      S("volley", 480, 660, "Volleyball", "play"),
+      S("med1", 690, 750, "Meditation", "still"),
+      S("spa", 750, 810, "Spa time", "spa"),
+      S("tre", 810, 840, TRE_NAME, "tre", TRE),
+      S("med2", 840, 900, "Meditation", "still")
+    ] },
+    { key: "mon", dow: "Mon", long: "Monday", date: "Nov 23",
+      sessions: standard().map(function (s) { if (s.key === "tre") s.start = 810; return s; }) },
+    { key: "tue", dow: "Tue", long: "Tuesday", date: "Nov 24", sessions: standard() }
+  ];
+  var DAY_START = 480, DAY_END = 0;
+  DAYS.forEach(function (d) { d.sessions.forEach(function (s) { DAY_END = Math.max(DAY_END, s.end); }); });
+  var STORE_KEY = "retreat-signup-v1";
+
+  function clock(m) {
+    var h = Math.floor(m / 60), mm = m % 60;
+    var h12 = h % 12 === 0 ? 12 : h % 12;
+    return h12 + ":" + (mm < 10 ? "0" : "") + mm;
+  }
+  function mer(m) { return m < 720 ? "AM" : "PM"; }
+  function range(a, b) {
+    return mer(a) === mer(b)
+      ? clock(a) + " – " + clock(b) + " " + mer(b)
+      : clock(a) + " " + mer(a) + " – " + clock(b) + " " + mer(b);
+  }
+  DAYS.forEach(function (d) { d.sessions.forEach(function (s) { s.time = range(s.start, s.end); }); });
+
+  var picked = {};
+  var valid = {};
+  DAYS.forEach(function (d) { d.sessions.forEach(function (s) { valid[d.key + "|" + s.key] = true; }); });
+  var nameEl = document.getElementById("name");
+  var notesEl = document.getElementById("notes");
+
+  function id(d, s) { return d + "|" + s; }
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+    if (saved) {
+      (saved.picked || []).forEach(function (k) { if (valid[k]) picked[k] = true; });
+      nameEl.value = saved.name || "";
+      notesEl.value = saved.notes || "";
+    }
+  } catch (e) {}
+
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        picked: Object.keys(picked), name: nameEl.value, notes: notesEl.value
+      }));
+    } catch (e) {}
+  }
+
+  function el(tag, cls, html) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (html != null) n.innerHTML = html;
+    return n;
+  }
+
+  // The video can play inside the pop-up only when the page is its own site (not framed).
+  var standalone = false;
+  try { standalone = window.top === window.self; } catch (e) {}
+  function openTre() {
+    var dlg = document.getElementById("treDialog");
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  }
+  var thumb = document.getElementById("treThumb");
+  var videoBox = document.getElementById("treVideo");
+  thumb.addEventListener("click", function (e) {
+    if (!standalone) return; // inside a frame, the link opens YouTube instead
+    e.preventDefault();
+    var f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/aRXNzFEoyxQ?autoplay=1&rel=0&playsinline=1";
+    f.title = "TRE intro video";
+    f.allow = "autoplay; accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    videoBox.appendChild(f);
+    videoBox.hidden = false;
+    thumb.hidden = true;
+  });
+  document.getElementById("treDialog").addEventListener("close", function () {
+    // Remove the player so the video stops when the pop-up closes.
+    videoBox.innerHTML = "";
+    videoBox.hidden = true;
+    thumb.hidden = false;
+  });
+
+  function slotButton(day, s, inCalendar) {
+    var mins = s.end - s.start;
+    var compact = inCalendar && mins < 60;
+    var b = el("button", "slot k-" + s.kind + (compact ? " compact" : ""));
+    b.type = "button";
+    b.dataset.k = id(day.key, s.key);
+    b.setAttribute("aria-label", day.long + " " + day.date + ", " + s.time + ", " + s.name);
+    var txt = el("span", "txt");
+    var label = inCalendar ? (s.short || s.name) : s.name;
+    if (compact) {
+      txt.appendChild(document.createTextNode(label));
+      txt.appendChild(el("span", "when", clock(s.start)));
+    } else {
+      txt.appendChild(el("span", "when", s.time));
+      txt.appendChild(document.createTextNode(label));
+    }
+    b.appendChild(txt);
+    if (s.info) {
+      var i = el("span", "info", "?");
+      i.setAttribute("role", "button");
+      i.setAttribute("tabindex", "0");
+      i.setAttribute("aria-label", "What is TRE?");
+      i.addEventListener("click", function (e) { e.stopPropagation(); openTre(); });
+      i.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); openTre(); }
+      });
+      b.appendChild(i);
+    }
+    if (inCalendar) {
+      var hour = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hour")) || 72;
+      b.style.top = ((s.start - DAY_START) / 60 * hour + 2) + "px";
+      b.style.height = (mins / 60 * hour - 4) + "px";
+    }
+    b.addEventListener("click", function () {
+      var k = b.dataset.k;
+      if (picked[k]) delete picked[k]; else picked[k] = true;
+      refresh();
+    });
+    return b;
+  }
+
+  function toggleDay(d) {
+    var keys = d.sessions.map(function (s) { return id(d.key, s.key); });
+    var allOn = keys.every(function (k) { return picked[k]; });
+    keys.forEach(function (k) { if (allOn) delete picked[k]; else picked[k] = true; });
+    refresh();
+  }
+
+  // Desktop calendar
+  var cal = document.getElementById("cal");
+  var hourPx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hour")) || 72;
+  var height = (DAY_END - DAY_START) / 60 * hourPx;
+  cal.appendChild(el("div", "corner-cell"));
+  DAYS.forEach(function (d) {
+    var h = el("button", "head-btn");
+    h.type = "button";
+    h.setAttribute("aria-label", "Pick every session on " + d.long + " " + d.date);
+    h.innerHTML = '<span class="dow">' + d.dow + '</span><span class="dom">' + d.date + '</span><span class="all">Whole day</span>';
+    h.addEventListener("click", function () { toggleDay(d); });
+    cal.appendChild(h);
+  });
+  var rail = el("div", "rail");
+  rail.style.height = height + "px";
+  for (var m = DAY_START; m <= DAY_END; m += 60) {
+    var lab = el("span", null, (Math.floor(m / 60) % 12 || 12) + " " + mer(m));
+    lab.style.top = ((m - DAY_START) / 60 * hourPx) + "px";
+    rail.appendChild(lab);
+  }
+  cal.appendChild(rail);
+  DAYS.forEach(function (d) {
+    var col = el("div", "col");
+    col.style.height = height + "px";
+    d.sessions.forEach(function (s) { col.appendChild(slotButton(d, s, true)); });
+    cal.appendChild(col);
+  });
+
+
+  function buildText() {
+    var name = nameEl.value.trim();
+    var lines = ["ELAN'S AT-HOME RETREAT WITH FRIENDS · SIGN-UP (Nov 18–24)", "Name: " + (name || "[add your name]")];
+    var total = 0, body = [];
+    DAYS.forEach(function (d) {
+      var mine = d.sessions.filter(function (s) { return picked[id(d.key, s.key)]; });
+      if (!mine.length) return;
+      total += mine.length;
+      body.push("");
+      body.push(d.long + ", " + d.date);
+      mine.forEach(function (s) { body.push("• " + s.time + "  " + s.name); });
+    });
+    lines.push("Sessions: " + total);
+    lines = lines.concat(body);
+    var notes = notesEl.value.trim();
+    if (notes) { lines.push(""); lines.push("Note: " + notes); }
+    return { text: lines.join("\n"), total: total, name: name };
+  }
+
+  var preview = document.getElementById("preview");
+  var countEl = document.getElementById("count");
+  var status = document.getElementById("status");
+  var fallback = document.getElementById("fallback");
+  var fallbackText = document.getElementById("fallbackText");
+
+  function refresh() {
+    document.querySelectorAll(".slot").forEach(function (b) {
+      b.setAttribute("aria-pressed", picked[b.dataset.k] ? "true" : "false");
+    });
+    var r = buildText();
+    preview.textContent = r.total ? r.text : "Your sign-up will appear here as you pick sessions.";
+    countEl.innerHTML = r.total + "<small>" + (r.total === 1 ? "session" : "sessions") + " picked</small>";
+    status.textContent = "";
+    status.className = "status";
+    fallback.hidden = true;
+    save();
+  }
+
+  nameEl.addEventListener("input", refresh);
+  notesEl.addEventListener("input", refresh);
+  document.getElementById("clearAll").addEventListener("click", function () { picked = {}; refresh(); });
+
+  document.getElementById("copy").addEventListener("click", function () {
+    var r = buildText();
+    if (!r.name) {
+      status.textContent = "Add your name in Step 1 first.";
+      status.className = "status warn";
+      nameEl.focus();
+      return;
+    }
+    if (!r.total) {
+      status.textContent = "Pick at least one session in Step 2.";
+      status.className = "status warn";
+      return;
+    }
+    function showFallback() {
+      fallbackText.value = r.text;
+      fallback.hidden = false;
+      fallbackText.focus();
+      fallbackText.select();
+      status.textContent = "";
+    }
+    try {
+      navigator.clipboard.writeText(r.text).then(function () {
+        status.textContent = "Copied. Now paste it into a message to me.";
+        status.className = "status";
+      }, showFallback);
+    } catch (e) { showFallback(); }
+  });
+
+  // Calendar file (.ics). Retreat times are Puerto Rico time (UTC-4, no daylight saving).
+  var UTC_OFFSET_MIN = 240;
+  function icsStamp(dayNum, mins) {
+    var t = mins + UTC_OFFSET_MIN;
+    var h = Math.floor(t / 60), m = t % 60;
+    function p(n) { return (n < 10 ? "0" : "") + n; }
+    return "202611" + p(dayNum) + "T" + p(h) + p(m) + "00Z";
+  }
+  function icsText(s) { return s.replace(/\\/g, "\\\\").replace(/([,;])/g, "\\$1").replace(/\n/g, "\\n"); }
+  function buildIcs() {
+    var now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+    var out = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Elan's Retreat//Sign-up//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+      "X-WR-CALNAME:" + icsText("Elan's At-Home Retreat")];
+    var n = 0;
+    DAYS.forEach(function (d) {
+      var dayNum = parseInt(d.date.replace(/\D/g, ""), 10);
+      d.sessions.forEach(function (s) {
+        if (!picked[id(d.key, s.key)]) return;
+        n++;
+        out.push("BEGIN:VEVENT",
+          "UID:" + d.key + "-" + s.key + "-2026@elans-retreat",
+          "DTSTAMP:" + now,
+          "DTSTART:" + icsStamp(dayNum, s.start),
+          "DTEND:" + icsStamp(dayNum, s.end),
+          "SUMMARY:" + icsText(s.name + " (Elan's retreat)"),
+          "LOCATION:" + icsText("To be confirmed by Elan"),
+          "DESCRIPTION:" + icsText("Part of Elan's At-Home Retreat With Friends. Elan will share the location once sign-ups are in."),
+          "END:VEVENT");
+      });
+    });
+    out.push("END:VCALENDAR");
+    return { text: out.join("\r\n") + "\r\n", count: n };
+  }
+  var calStatus = document.getElementById("calStatus");
+  document.getElementById("addCal").addEventListener("click", function () {
+    var r = buildIcs();
+    if (!r.count) {
+      calStatus.textContent = "Pick at least one session first.";
+      calStatus.className = "status warn";
+      return;
+    }
+    try {
+      var blob = new Blob([r.text], { type: "text/calendar;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "elans-retreat.ics";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      calStatus.textContent = "Calendar file saved with " + r.count + (r.count === 1 ? " session" : " sessions") + ". Open it to add them.";
+      calStatus.className = "status";
+    } catch (e) {
+      calStatus.textContent = "Your browser blocked the download. Try opening this page in Safari or Chrome.";
+      calStatus.className = "status warn";
+    }
+  });
+
+  var dlg = document.getElementById("treDialog");
+  document.getElementById("whatTre").addEventListener("click", openTre);
+  document.getElementById("closeTre").addEventListener("click", function () { dlg.close(); });
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+
+  refresh();
+})();
+</script>
+</body>
+</html>
