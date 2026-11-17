@@ -277,14 +277,6 @@ dialog::backdrop { background: rgba(30, 26, 18, 0.5); }
 .yt-link { color: var(--muted); font-size: 0.88rem; align-self: flex-start; }
 @media (prefers-reduced-motion: reduce) { .big-play { transition: none; } }
 
-/* Add to calendar */
-.cal-add {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px;
-}
-.cal-add p { color: var(--muted); max-width: 52ch; flex: 1 1 280px; min-width: 0; }
-.cal-add .actions { flex: none; }
-
 @media (prefers-reduced-motion: reduce) { .slot { transition: none; } }
 </style>
 </head>
@@ -361,20 +353,6 @@ dialog::backdrop { background: rgba(30, 26, 18, 0.5); }
           <label for="fallbackText">Your browser blocked copying. Select this text and copy it yourself:</label>
           <textarea id="fallbackText" readonly></textarea>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section aria-labelledby="s4">
-    <div class="step-head">
-      <span class="eyebrow">Last step</span>
-      <h2 id="s4">Add your sessions to your calendar</h2>
-    </div>
-    <div class="cal-add">
-      <p>This saves a calendar file with every session you picked. Open it to add them all to Apple Calendar, Google Calendar or Outlook. Locations will say "to be confirmed" until I send them.</p>
-      <div class="actions">
-        <button class="primary" type="button" id="addCal">Add to my calendar</button>
-        <span class="status" id="calStatus" role="status"></span>
       </div>
     </div>
   </section>
@@ -676,65 +654,6 @@ dialog::backdrop { background: rgba(30, 26, 18, 0.5); }
         status.className = "status";
       }, showFallback);
     } catch (e) { showFallback(); }
-  });
-
-  // Calendar file (.ics). Retreat times are Puerto Rico time (UTC-4, no daylight saving).
-  var UTC_OFFSET_MIN = 240;
-  function icsStamp(dayNum, mins) {
-    var t = mins + UTC_OFFSET_MIN;
-    var h = Math.floor(t / 60), m = t % 60;
-    function p(n) { return (n < 10 ? "0" : "") + n; }
-    return "202611" + p(dayNum) + "T" + p(h) + p(m) + "00Z";
-  }
-  function icsText(s) { return s.replace(/\\/g, "\\\\").replace(/([,;])/g, "\\$1").replace(/\n/g, "\\n"); }
-  function buildIcs() {
-    var now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
-    var out = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Elan's Retreat//Sign-up//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
-      "X-WR-CALNAME:" + icsText("Elan's At-Home Retreat")];
-    var n = 0;
-    DAYS.forEach(function (d) {
-      var dayNum = parseInt(d.date.replace(/\D/g, ""), 10);
-      d.sessions.forEach(function (s) {
-        if (!picked[id(d.key, s.key)]) return;
-        n++;
-        out.push("BEGIN:VEVENT",
-          "UID:" + d.key + "-" + s.key + "-2026@elans-retreat",
-          "DTSTAMP:" + now,
-          "DTSTART:" + icsStamp(dayNum, s.start),
-          "DTEND:" + icsStamp(dayNum, s.end),
-          "SUMMARY:" + icsText(s.name + " (Elan's retreat)"),
-          "LOCATION:" + icsText("To be confirmed by Elan"),
-          "DESCRIPTION:" + icsText("Part of Elan's At-Home Retreat With Friends. Elan will share the location once sign-ups are in."),
-          "END:VEVENT");
-      });
-    });
-    out.push("END:VCALENDAR");
-    return { text: out.join("\r\n") + "\r\n", count: n };
-  }
-  var calStatus = document.getElementById("calStatus");
-  document.getElementById("addCal").addEventListener("click", function () {
-    var r = buildIcs();
-    if (!r.count) {
-      calStatus.textContent = "Pick at least one session first.";
-      calStatus.className = "status warn";
-      return;
-    }
-    try {
-      var blob = new Blob([r.text], { type: "text/calendar;charset=utf-8" });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement("a");
-      a.href = url;
-      a.download = "elans-retreat.ics";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-      calStatus.textContent = "Calendar file saved with " + r.count + (r.count === 1 ? " session" : " sessions") + ". Open it to add them.";
-      calStatus.className = "status";
-    } catch (e) {
-      calStatus.textContent = "Your browser blocked the download. Try opening this page in Safari or Chrome.";
-      calStatus.className = "status warn";
-    }
   });
 
   var dlg = document.getElementById("treDialog");
