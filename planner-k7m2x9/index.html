@@ -84,10 +84,14 @@ button { font: inherit; cursor: pointer; }
 }
 .slot:hover { border-color: currentColor; }
 .slot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Child sizes are in em so the auto-fit can shrink a whole session by changing one font-size. */
+.slot > span { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
 .slot .nm { font-weight: 600; }
-.slot .when { font-size: 0.68rem; font-weight: 600; opacity: 0.78; font-variant-numeric: tabular-nums; }
-.slot .who { font-weight: 700; }
-.slot .where { display: flex; align-items: center; gap: 3px; font-size: 0.72rem; font-weight: 600; }
+.slot .when { font-size: 0.82em; font-weight: 600; opacity: 0.78; font-variant-numeric: tabular-nums; }
+.slot .who { font-size: 0.8em; font-weight: 700; letter-spacing: 0.01em; }
+.slot .where { display: flex; align-items: center; gap: 3px; font-size: 0.86em; font-weight: 600; }
+.slot.no-time .when { display: none; }
+.slot.pin-only .where .ltxt { display: none; }
 .slot .where svg { width: 10px; height: 10px; flex: none; }
 .slot.empty { opacity: 0.5; }
 .slot.empty .who { font-weight: 500; font-style: italic; }
@@ -342,7 +346,7 @@ footer { color: var(--muted); font-size: 0.9rem; max-width: 64ch; }
     b.appendChild(el("span", "nm", x.s.short || x.s.name));
     b.appendChild(el("span", "when", b.classList.contains("compact") ? clock(x.s.start) : x.s.time));
     b.appendChild(el("span", "who", who.length ? who.join(", ") : "No sign-ups yet"));
-    if (loc) { var w = el("span", "where"); w.innerHTML = PIN; w.appendChild(document.createTextNode(loc)); b.appendChild(w); }
+    if (loc) { var w = el("span", "where"); w.innerHTML = PIN; w.appendChild(el("span", "ltxt", loc)); w.title = loc; b.appendChild(w); }
     b.classList.toggle("empty", !who.length);
     b.classList.toggle("has-loc", !!loc);
     b.setAttribute("aria-label", x.d.long + " " + x.d.date + ", " + x.s.time + ", " + x.s.name + ". " +
@@ -396,8 +400,27 @@ footer { color: var(--muted); font-size: 0.9rem; max-width: 64ch; }
     });
     return { text: ["RETREAT PLANNER · LOCATIONS (Nov 18–24)", "Locations set: " + n].concat(lines).join("\n"), count: n };
   }
+  // Shrink a session's text until it fits its box; as a last resort drop the time line (the rail shows it).
+  function overflows(b) { return b.scrollHeight > b.clientHeight + 1 || b.scrollWidth > b.clientWidth + 1; }
+  function shrink(b) {
+    var size = 0.8; b.style.fontSize = size + "rem";
+    while (overflows(b) && size > 0.56) { size = Math.round((size - 0.04) * 100) / 100; b.style.fontSize = size + "rem"; }
+  }
+  // Stages: smaller text → hide the time (the rail shows it) → show only a pin for the location (tap for details).
+  function fitSlot(b) {
+    b.classList.remove("no-time", "pin-only");
+    shrink(b);
+    if (overflows(b)) { b.classList.add("no-time"); shrink(b); }
+    if (overflows(b)) { b.classList.add("pin-only"); shrink(b); }
+  }
+  function fitAll() { slots.forEach(function (x) { fitSlot(x.b); }); }
+  var fitTimer = null;
+  window.addEventListener("resize", function () { clearTimeout(fitTimer); fitTimer = setTimeout(fitAll, 120); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+
   function refresh() {
     slots.forEach(paintSlot);
+    fitAll();
     var r = buildText();
     preview.textContent = r.count ? r.text : "Tap a session in the calendar to add its location. Your changes will show up here.";
     countEl.innerHTML = r.count + "<small>" + (r.count === 1 ? "location" : "locations") + " set</small>";
