@@ -248,9 +248,10 @@ footer { color: var(--muted); font-size: 0.9rem; max-width: 64ch; }
   }
   var DAYS = [
     { key: "wed", dow: "Wed", long: "Wednesday", date: "Nov 18",
-      sessions: standard().filter(function (s) { return s.key !== "evening"; })
-        .concat([S("volley", 1020, 1140, "Volleyball", "play")]) },
-    { key: "thu", dow: "Thu", long: "Thursday", date: "Nov 19", sessions: standard() },
+      sessions: standard().filter(function (s) { return ["evening", "tre", "med2"].indexOf(s.key) < 0; })
+        .concat([S("float", 780, 900, "Float tank meditation", "still"), S("volley", 1020, 1140, "Volleyball", "play")]) },
+    { key: "thu", dow: "Thu", long: "Thursday", date: "Nov 19",
+      sessions: standard().map(function (s) { if (s.key === "workout") s.name = "Run at track"; return s; }) },
     { key: "fri", dow: "Fri", long: "Friday", date: "Nov 20",
       sessions: standard().map(function (s) {
         if (s.key === "read") { s.start -= 60; s.end -= 60; }
@@ -274,9 +275,10 @@ footer { color: var(--muted); font-size: 0.9rem; max-width: 64ch; }
       sessions: standard().map(function (s) { if (s.key === "tre") s.start = 810; return s; }) },
     { key: "tue", dow: "Tue", long: "Tuesday", date: "Nov 24", sessions: standard() }
   ];
+  DAYS.forEach(function (d) { d.sessions.sort(function (a, b) { return a.start - b.start; }); });
 
-  var ATTENDEES = {"wed|workout":["Burke"],"wed|med1":["Burke"],"wed|spa":["Burke","Vivian"],"thu|workout":["Burke"],"thu|med1":["Burke"],"thu|spa":["Burke","Vanessa","Vivian"],"fri|workout":["Burke"],"fri|med1":["Burke"],"fri|spa":["Burke","Vanessa","Vivian"],"fri|tre":["Burke","Vivian"],"fri|med2":["Burke"],"fri|read":["Burke","Vivian"],"fri|evening":["Burke","Vivian"],"sat|workout":["Burke"],"sat|med1":["Burke"],"sat|spa":["Burke","Vivian"],"sun|volley":["Burke","Vanessa"],"mon|workout":["Burke"],"mon|med1":["Burke"],"mon|spa":["Burke","Vivian"],"mon|evening":["Burke"],"tue|workout":["Burke"],"tue|med1":["Burke"],"tue|spa":["Burke","Vanessa"],"tue|evening":["Burke","Vivian"],"wed|volley":["Vanessa"],"thu|tre":["Vanessa"],"tue|tre":["Vanessa"],"sat|tre":["Vivian"],"sat|read":["Vivian"],"sun|spa":["Vivian"],"sun|tre":["Vivian"]};
-  var PEOPLE = [{"name":"Burke","count":25},{"name":"Vanessa","count":7},{"name":"Vivian","count":13}];
+  var ATTENDEES = {"thu|workout":["Annie","Berk","Wes"],"wed|workout":["Berk"],"wed|med1":["Berk"],"wed|spa":["Berk","Vivian"],"thu|med1":["Berk"],"thu|spa":["Berk","Vanessa","Vivian"],"fri|workout":["Berk"],"fri|med1":["Berk"],"fri|spa":["Berk","Vanessa","Vivian"],"fri|tre":["Berk","Vivian"],"fri|med2":["Berk"],"fri|read":["Berk","Vivian"],"fri|evening":["Berk","Vivian"],"sat|workout":["Berk"],"sat|med1":["Berk"],"sat|spa":["Berk","Vivian"],"sun|volley":["Berk","Vanessa"],"mon|workout":["Berk"],"mon|med1":["Berk"],"mon|spa":["Berk","Vivian"],"mon|evening":["Berk"],"tue|workout":["Berk"],"tue|med1":["Berk"],"tue|spa":["Berk","Vanessa"],"tue|evening":["Berk","Vivian"],"wed|volley":["Vanessa"],"thu|tre":["Vanessa"],"tue|tre":["Vanessa"],"sat|tre":["Vivian"],"sat|read":["Vivian"],"sun|spa":["Vivian"],"sun|tre":["Vivian"]};
+  var PEOPLE = [{"name":"Annie","count":1},{"name":"Berk","count":25},{"name":"Vanessa","count":7},{"name":"Vivian","count":13},{"name":"Wes","count":1}];
   var DAY_START = 480, DAY_END = 0;
   DAYS.forEach(function (d) { d.sessions.forEach(function (s) { DAY_END = Math.max(DAY_END, s.end); }); });
   var STORE = "retreat-host-locations-v1";
@@ -293,11 +295,11 @@ footer { color: var(--muted); font-size: 0.9rem; max-width: 64ch; }
   function save() { try { localStorage.setItem(STORE, JSON.stringify(locs)); } catch (e) {} }
 
   // Stats + people
-  var withGuests = 0;
-  DAYS.forEach(function (d) { d.sessions.forEach(function (s) { if ((ATTENDEES[id(d, s)] || []).length) withGuests++; }); });
+  var withGuests = 0, total = 0;
+  DAYS.forEach(function (d) { d.sessions.forEach(function (s) { total++; if ((ATTENDEES[id(d, s)] || []).length) withGuests++; }); });
   var stats = document.getElementById("stats");
   stats.innerHTML = "";
-  [[PEOPLE.length, PEOPLE.length === 1 ? " person signed up" : " people signed up"], [withGuests, " of 46 sessions have guests"]].forEach(function (p) {
+  [[PEOPLE.length, PEOPLE.length === 1 ? " person signed up" : " people signed up"], [withGuests, " of " + total + " sessions have guests"]].forEach(function (p) {
     var w = el("div"); var n = el("span", null, String(p[0])); w.appendChild(n); w.appendChild(document.createTextNode(p[1])); stats.appendChild(w);
   });
   var people = document.getElementById("people");

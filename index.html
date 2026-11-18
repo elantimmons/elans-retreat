@@ -397,9 +397,10 @@ dialog::backdrop { background: rgba(30, 26, 18, 0.5); }
   }
   var DAYS = [
     { key: "wed", dow: "Wed", long: "Wednesday", date: "Nov 18",
-      sessions: standard().filter(function (s) { return s.key !== "evening"; })
-        .concat([S("volley", 1020, 1140, "Volleyball", "play")]) },
-    { key: "thu", dow: "Thu", long: "Thursday", date: "Nov 19", sessions: standard() },
+      sessions: standard().filter(function (s) { return ["evening", "tre", "med2"].indexOf(s.key) < 0; })
+        .concat([S("float", 780, 900, "Float tank meditation", "still"), S("volley", 1020, 1140, "Volleyball", "play")]) },
+    { key: "thu", dow: "Thu", long: "Thursday", date: "Nov 19",
+      sessions: standard().map(function (s) { if (s.key === "workout") s.name = "Run at track"; return s; }) },
     { key: "fri", dow: "Fri", long: "Friday", date: "Nov 20",
       sessions: standard().map(function (s) {
         if (s.key === "read") { s.start -= 60; s.end -= 60; }
@@ -423,6 +424,7 @@ dialog::backdrop { background: rgba(30, 26, 18, 0.5); }
       sessions: standard().map(function (s) { if (s.key === "tre") s.start = 810; return s; }) },
     { key: "tue", dow: "Tue", long: "Tuesday", date: "Nov 24", sessions: standard() }
   ];
+  DAYS.forEach(function (d) { d.sessions.sort(function (a, b) { return a.start - b.start; }); });
   var DAY_START = 480, DAY_END = 0;
   DAYS.forEach(function (d) { d.sessions.forEach(function (s) { DAY_END = Math.max(DAY_END, s.end); }); });
   var STORE_KEY = "retreat-signup-v1";
