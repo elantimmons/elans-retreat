@@ -297,6 +297,14 @@ footer { color: var(--muted); font-size: 0.9rem; max-width: 64ch; }
   var locs = {};
   try { locs = JSON.parse(localStorage.getItem(STORE) || "{}") || {}; } catch (e) { locs = {}; }
   function save() { try { localStorage.setItem(STORE, JSON.stringify(locs)); } catch (e) {} }
+  // One-time cleanup (Elan asked 2026-11-19): drop any "My house" location saved in this browser.
+  try {
+    if (!localStorage.getItem("retreat-host-cleanup-myhouse")) {
+      Object.keys(locs).forEach(function (k) { if (/^\s*my house\s*$/i.test(String(locs[k]))) delete locs[k]; });
+      save();
+      localStorage.setItem("retreat-host-cleanup-myhouse", "1");
+    }
+  } catch (e) {}
 
   // Stats + people
   var withGuests = 0, total = 0;
